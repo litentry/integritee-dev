@@ -175,8 +175,7 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 #
 ENV RUSTUP_HOME=/opt/rust
 ENV CARGO_HOME=/opt/rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path
-RUN chmod 777 /opt/rust -R
+RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y --no-modify-path && chmod 777 /opt/rust -R
 
 # set environment variables
 ENV DEBIAN_FRONTEND noninteractive
@@ -187,7 +186,6 @@ ENV PKG_CONFIG_PATH "${PKG_CONFIG_PATH}:${SGX_SDK}/pkgconfig"
 ENV LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:${SGX_SDK}/sdk_libs"
 
 # install sccache
-RUN rustup default stable
 RUN cargo install sccache --locked && sccache --version
 
 COPY entrypoint.sh /entrypoint.sh
