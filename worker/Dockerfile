@@ -18,6 +18,9 @@
 #  Rust-sgx-sdk installed
 #  IPFS installed
 
+
+# Litentry: remove IPFS, rsync
+
 FROM ubuntu:22.04
 
 # Install SGX
@@ -100,22 +103,6 @@ RUN echo "VERSION_IPFS = ${VERSION_IPFS}"
 
 SHELL ["/bin/bash", "-c"]
 
-# install rsync
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends \
-    rsync && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/apt/archives/*
-
-# install ipfs
-RUN mkdir -p /ipfs && \
-    cd /ipfs && \
-    wget -O go-ipfs.tar.gz https://dist.ipfs.io/go-ipfs/v${VERSION_IPFS}/go-ipfs_v${VERSION_IPFS}_linux-amd64.tar.gz && \
-    tar xvfz go-ipfs.tar.gz && \
-    cd go-ipfs && \
-    ./install.sh
-
 # re-install / downgrade binutils since the baiduxlab/sgx-rust image
 # comes with ld version 2.35 which cannot compile the node.
 RUN apt-get remove -y binutils && \
@@ -191,6 +178,10 @@ ENV CARGO_HOME=/opt/rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path
 RUN chmod 777 /opt/rust -R
 
+# install sccache
+RUN rustup default stable
+RUN cargo install sccache --locked && sccache --version
+
 # set environment variables
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
@@ -203,9 +194,5 @@ COPY entrypoint.sh /entrypoint.sh
 COPY .bashrc /home/ubuntu/
 
 WORKDIR /home/ubuntu
-
-# install sccache
-RUN rustup default stable
-RUN cargo install sccache --locked && sccache --version
 
 ENTRYPOINT ["/entrypoint.sh"]
