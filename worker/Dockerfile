@@ -178,10 +178,6 @@ ENV CARGO_HOME=/opt/rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path
 RUN chmod 777 /opt/rust -R
 
-# install sccache
-RUN rustup default stable
-RUN cargo install sccache --locked && sccache --version
-
 # set environment variables
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
@@ -189,6 +185,10 @@ ENV SGX_SDK /opt/sgxsdk
 ENV PATH "$PATH:${SGX_SDK}/bin:${SGX_SDK}/bin/x64:/opt/rust/bin"
 ENV PKG_CONFIG_PATH "${PKG_CONFIG_PATH}:${SGX_SDK}/pkgconfig"
 ENV LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:${SGX_SDK}/sdk_libs"
+
+# install sccache
+RUN rustup default stable
+RUN cargo install sccache --locked && sccache --version
 
 COPY entrypoint.sh /entrypoint.sh
 COPY .bashrc /home/ubuntu/
