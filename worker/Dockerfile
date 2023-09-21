@@ -175,7 +175,9 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 #
 ENV RUSTUP_HOME=/opt/rust
 ENV CARGO_HOME=/opt/rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y --no-modify-path && chmod 777 /opt/rust -R
+RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y --no-modify-path && \
+  mkdir -p /opt/rust/sccache /opt/rust/git/db /opt/rust/registry/cache /opt/rust/registry/index && \
+  chmod 777 /opt/rust -R
 
 # set environment variables
 ENV DEBIAN_FRONTEND noninteractive
