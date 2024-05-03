@@ -82,9 +82,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/apt/archives/*
 
-RUN wget https://download.01.org/intel-sgx/sgx-linux/2.17.1/distro/ubuntu20.04-server/sgx_linux_x64_sdk_2.17.101.1.bin && \
-    chmod +x ./sgx_linux_x64_sdk_2.17.101.1.bin && \
-    ./sgx_linux_x64_sdk_2.17.101.1.bin --prefix /opt/
+RUN wget https://download.01.org/intel-sgx/sgx-linux/2.21/distro/ubuntu22.04-server/sgx_linux_x64_sdk_2.21.100.1.bin && \
+    chmod +x ./sgx_linux_x64_sdk_2.21.100.1.bin && \
+    ./sgx_linux_x64_sdk_2.21.100.1.bin --prefix /opt/
 
 RUN apt-get update && apt-get install -y \
     libsgx-enclave-common-dev \
